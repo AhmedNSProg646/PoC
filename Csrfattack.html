@@ -15,6 +15,7 @@
     fetch(targetUrl, {
       method: "GET", // قراءة البيانات غالباً بتكون GET
       credentials: "include", // مهم جداً لإرسال الـ Cookies الخاصة بالضحية
+      mode:"cors"
       headers: {
         "Accept": "application/json"
       }
