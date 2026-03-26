@@ -9,22 +9,9 @@
   <pre id="output">Waiting for response...</pre>
 
   <script>
-    fetch("https://template.uat.foodstorm.com/cart/add", {
-      method: "POST",
+    fetch("https://template.uat.foodstorm.com/cart/current", {
+      method: "GET",
       credentials: "include",
-      headers: {
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify({
-        "Item": "Test Vanilla Ice Cream",
-        "Quantity": 7,
-        "WeightRequiresConfirmation": false,
-        "Pack": null,
-        "PackSelection": "",
-        "options": null,
-        "HasItemOptions": false,
-        "Recommendation": {}
-      })
     })
     .then(r => {
       document.getElementById("output").innerText +=
