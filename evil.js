@@ -1,3 +1,3 @@
 
 )]}',
-alert('XSS Vulnerability Found! Cookies: ' + document.cookie);
+<svg xmlns="http://www.w3.org/2000/svg" onload="alert('XSS')">
